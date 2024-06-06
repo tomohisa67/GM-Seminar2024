@@ -3,13 +3,13 @@ Presentation slides are [here](https://en.wikipedia.org/wiki/Diffusion_model).
 
 ## Setup
 Create vitual environment.
-* For Docker User
+* Docker
 ```
 docker-compose build
 docker-compose up -d
 docker-compose exec kasai-lab bash
 ```
-* For Conda User
+* Conda
 ```
 conda create -n gm-seminar python=3.12
 pip install -r requirments.txt
