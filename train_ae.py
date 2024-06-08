@@ -12,16 +12,16 @@ from typing import Dict, Any
 def train_ae(epoch: int, model: Autoencoder, train_loader: DataLoader, optimizer: optim.Optimizer, device: torch.device) -> None:
     model.train()
     train_loss = 0
-    for batch_idx, (data, _) in enumerate(train_loader):
+    for i, (data, _) in enumerate(train_loader):
         data = data.to(device)
         optimizer.zero_grad()
-        recon_batch = model(data)
+        recon_batch, latent_vec = model(data)
         loss = autoencoder_loss_function(recon_batch, data)
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
-        if batch_idx % 10 == 0:
-            print(f'Train Epoch: {epoch} [{batch_idx * len(data)}/{len(train_loader.dataset)} ({100. * batch_idx / len(train_loader):.0f}%)]\tLoss: {loss.item() / len(data):.6f}')
+        if i % 10 == 0:
+            print(f'Train Epoch: {epoch} [{i * len(data)}/{len(train_loader.dataset)} ({100. * i / len(train_loader):.0f}%)]\tLoss: {loss.item() / len(data):.6f}')
     print(f'====> Epoch: {epoch} Average loss: {train_loss / len(train_loader.dataset):.4f}')
 
 def test_ae(epoch: int, model: Autoencoder, test_loader: DataLoader, device: torch.device) -> None:
@@ -45,8 +45,7 @@ def main() -> None:
         config: Dict[str, Any] = json.load(f)
 
     device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train_loader: DataLoader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
-    test_loader: DataLoader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
+    train_loader, test_loader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
     
     model: Autoencoder = Autoencoder(
         input_dim=config["input_dim"], 

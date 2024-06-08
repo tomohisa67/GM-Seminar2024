@@ -20,6 +20,13 @@ def infer_vae(model: VAE, data: Tensor, device: torch.device) -> Tensor:
         recon_batch, mu, logvar = model(data)
     return recon_batch, mu
 
+def infer_ae(model: Autoencoder, data: Tensor, device: torch.device) -> Tensor:
+    model.eval()
+    with torch.no_grad():
+        data = data.to(device)
+        recon_batch, latent_vec = model(data)
+    return recon_batch, latent_vec
+
 def main():
     parser = argparse.ArgumentParser(description='Inference with VAE')
     parser.add_argument('--model_type', type=str, required=True, help='Model type to use (vae)')
@@ -67,7 +74,7 @@ def main():
         test_data_iter = iter(test_loader)
         test_data, _ = next(test_data_iter)
 
-        reconstructed, latent_vec = model(test_data)
+        reconstructed, latent_vec = infer_ae(model, test_data, device)
         reconstructed = reconstructed.cpu().numpy()
         latent_vec = latent_vec.cpu().numpy()
         test_data = test_data.cpu().numpy()
@@ -76,10 +83,6 @@ def main():
         save_output(reconstructed, args.output_dir, file_name='reconstructed_ae.npy')
         # plot
         plot_images(test_data, reconstructed)
-
-
-
-
 
 if __name__ == '__main__':
     main()

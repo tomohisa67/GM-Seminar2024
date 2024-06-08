@@ -12,10 +12,6 @@ from typing import Dict, Any
 def train_vae(epoch: int, model: VAE, train_loader: DataLoader, optimizer: optim.Optimizer, device: torch.device) -> None:
     model.train()
     train_loss = 0
-    for i, (batch) in enumerate(train_loader):
-        print(batch)
-        break
-
     for i, (data, _) in enumerate(train_loader):
         data = data.to(device)
         optimizer.zero_grad()
@@ -49,8 +45,7 @@ def main() -> None:
         config: Dict[str, Any] = json.load(f)
 
     device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train_loader: DataLoader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
-    test_loader: DataLoader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
+    train_loader, test_loader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
     
     model: VAE = VAE(input_dim=config["input_dim"], hidden_dim=config["hidden_dim"], latent_dim=config["latent_dim"]).to(device)
     optimizer: optim.Optimizer = optim.Adam(model.parameters(), lr=config["learning_rate"])
