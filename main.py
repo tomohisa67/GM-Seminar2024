@@ -60,9 +60,11 @@ def main():
         # save
         save_output(reconstructed, args.output_dir, file_name='reconstructed.npy')
         # plot
-        plot_images(test_data, reconstructed)
+        # plot_images(test_data, reconstructed)
 
         # reduce dimensionality
+        reduced_features = reduce_dimensionality(latent_vec)
+        plot_reduced_features(reduced_features)
     
     elif args.model_type == 'ae':
         model = Autoencoder(
@@ -82,7 +84,11 @@ def main():
         # save
         save_output(reconstructed, args.output_dir, file_name='reconstructed_ae.npy')
         # plot
-        plot_images(test_data, reconstructed)
+        # plot_images(test_data, reconstructed)
+
+        # reduce dimensionality
+        reduced_features = reduce_dimensionality(latent_vec)
+        plot_reduced_features(reduced_features)
 
 if __name__ == '__main__':
     main()
