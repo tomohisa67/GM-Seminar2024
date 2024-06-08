@@ -1,6 +1,7 @@
 import torch
 from torch import Tensor
 from models.vae import VAE
+from models.ae import Autoencoder
 from data.dataset import get_dataloader
 from utils.utils import load_model, save_output
 from utils.plot import plot_images
@@ -10,12 +11,14 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
+from utils.visualize_feat import reduce_dimensionality, plot_reduced_features
+
 def infer_vae(model: VAE, data: Tensor, device: torch.device) -> Tensor:
     model.eval()
     with torch.no_grad():
         data = data.to(device)
         recon_batch, mu, logvar = model(data)
-    return recon_batch
+    return recon_batch, mu
 
 def main():
     parser = argparse.ArgumentParser(description='Inference with VAE')
@@ -41,15 +44,42 @@ def main():
 
         test_data_iter = iter(test_loader)
         test_data, _ = next(test_data_iter)
-        reconstructed = infer_vae(model, test_data, device)
+        reconstructed, latent_vec = infer_vae(model, test_data, device)
         
         reconstructed = reconstructed.cpu().numpy()
+        latent_vec = latent_vec.cpu().numpy()
         test_data = test_data.cpu().numpy()
 
         # save
         save_output(reconstructed, args.output_dir, file_name='reconstructed.npy')
         # plot
-        # plot_images(test_data, reconstructed)
+        plot_images(test_data, reconstructed)
+
+        # reduce dimensionality
+    
+    elif args.model_type == 'ae':
+        model = Autoencoder(
+            input_dim=config["input_dim"], 
+            hidden_dim=config["hidden_dim"], 
+            code_dim=config["code_dim"])
+        model = load_model(model, args.checkpoint, device)
+
+        test_data_iter = iter(test_loader)
+        test_data, _ = next(test_data_iter)
+
+        reconstructed, latent_vec = model(test_data)
+        reconstructed = reconstructed.cpu().numpy()
+        latent_vec = latent_vec.cpu().numpy()
+        test_data = test_data.cpu().numpy()
+
+        # save
+        save_output(reconstructed, args.output_dir, file_name='reconstructed_ae.npy')
+        # plot
+        plot_images(test_data, reconstructed)
+
+
+
+
 
 if __name__ == '__main__':
     main()

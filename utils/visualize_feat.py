@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 from umap import UMAP
+from sklearn.decomposition import PCA
 from typing import Union
 
 def reduce_dimensionality(features: np.ndarray, dimension_reduction: str = "umap") -> np.ndarray:
@@ -22,6 +23,8 @@ def reduce_dimensionality(features: np.ndarray, dimension_reduction: str = "umap
         reducer = UMAP(n_components=2)
     elif dimension_reduction == "tsne":
         reducer = TSNE(n_components=2)
+    elif dimension_reduction == "pca":
+        reducer = PCA(n_components=2)
     else:
         raise ValueError(f"Unsupported dimension reduction method: {dimension_reduction}")
 

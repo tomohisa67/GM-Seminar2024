@@ -21,10 +21,10 @@ class Autoencoder(nn.Module):
         )
 
     def forward(self, x: Tensor) -> Tensor:
-        x = x.view(-1, 784)  # フラット化
+        x = x.view(-1, 784)
         code = self.encoder(x)
         reconstructed = self.decoder(code)
-        return reconstructed
+        return reconstructed, code
 
 def autoencoder_loss_function(recon_x: Tensor, x: Tensor) -> Tensor:
     return F.binary_cross_entropy(recon_x, x.view(-1, 784), reduction='sum')

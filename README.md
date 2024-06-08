@@ -1,5 +1,5 @@
 # Generative Model Seminar 2024
-Presentation slides are [here](https://waseda.app.box.com/file/1551837790946).
+Presentation slides are [here](https://waseda.app.box.com/folder/268416256524).
 
 ## Setup
 Create vitual environment.
