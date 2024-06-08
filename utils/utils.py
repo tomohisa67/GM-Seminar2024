@@ -1,3 +1,5 @@
+import os
+import numpy as np
 import torch
 
 def save_checkpoint(state, filename="logs/checkpoint.pth.tar"):
@@ -11,4 +13,10 @@ def load_model(model, load_path, device):
     model.to(device)
     model.eval()
     return model
+
+def save_output(data, save_path, file_name='reconstructed.npy'):
+    os.makedirs(save_path, exist_ok=True)
+    save_path = os.path.join(save_path, file_name)
+    np.save(save_path, data)
+    print(f'Model output is saved as numpy array to {save_path}')
 

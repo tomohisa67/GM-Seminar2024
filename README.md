@@ -27,3 +27,7 @@ python train_vae.py --dataset mnist
 ```
 python main.py --model_type vae --checkpoint save/model_vae_mnist.pth
 ```
+
+## Reference
+
+## Citation

@@ -6,8 +6,8 @@ class VAE(nn.Module):
     def __init__(self, input_dim=784, hidden_dim=400, latent_dim=20):
         super(VAE, self).__init__()
         self.fc1 = nn.Linear(input_dim, hidden_dim)
-        self.fc21 = nn.Linear(hidden_dim, latent_dim)  # 均値
-        self.fc22 = nn.Linear(hidden_dim, latent_dim)  # 標準偏差
+        self.fc21 = nn.Linear(hidden_dim, latent_dim) # mean
+        self.fc22 = nn.Linear(hidden_dim, latent_dim) # logvar
         self.fc3 = nn.Linear(latent_dim, hidden_dim)
         self.fc4 = nn.Linear(hidden_dim, input_dim)
 

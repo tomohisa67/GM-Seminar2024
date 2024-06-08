@@ -1,0 +1,1 @@
+The paramerters of {'epoch', 'state_dict', 'optimizer'} are saved in this folder.
