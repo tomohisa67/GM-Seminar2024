@@ -38,7 +38,7 @@ python inference_main.py --model_type vae --checkpoint save/model_vae_mnist.pth
 │   └── dataset.py # train_loader, test_loaderを作成するための関数が記述されている
 ├── logs # 学習途中の各種パラメータ等を保存
 │   ├── checkpoint.pth.tar
-├── main.py # モデルの推論に使用
+├── inference_main.py # モデルの推論に使用
 ├── models # モデルを記述
 │   ├── ae.py
 │   └── vae.py
