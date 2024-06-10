@@ -25,7 +25,7 @@ python train_vae.py --dataset mnist
 
 ## Generate Samples
 ```
-python main.py --model_type vae --checkpoint save/model_vae_mnist.pth
+python inference_main.py --model_type vae --checkpoint save/model_vae_mnist.pth
 ```
 
 ## コードの詳細
