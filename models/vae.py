@@ -31,7 +31,7 @@ class VAE(nn.Module):
         z = self.reparameterize(mu, logvar)
         return self.decode(z), mu, logvar
 
-def loss_function(recon_x: Tensor, x: Tensor, mu: Tensor, logvar: Tensor) -> Tensor:
+def loss_function(recon_x: Tensor, x: Tensor, mu: Tensor, logvar: Tensor, reg: float) -> Tensor:
     BCE = F.binary_cross_entropy(recon_x, x.view(-1, 784), reduction='sum')
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    return BCE + KLD
+    return BCE + reg * KLD

@@ -2,3 +2,5 @@
 data/MNIST/*
 logs/*.pth.tar
 outputs/*.npy
+outputs/*.png
+save/model_vae_mnist_reg*.pth

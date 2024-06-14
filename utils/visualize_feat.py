@@ -32,7 +32,7 @@ def reduce_dimensionality(features: np.ndarray, dimension_reduction: str = "umap
     reduced_features = reducer.fit_transform(features)
     return reduced_features
 
-def plot_reduced_features(reduced_features: np.ndarray, title: str = "Feature Visualization") -> None:
+def plot_reduced_features(reduced_features: np.ndarray, labels: np.ndarray, title: str = "Feature Visualization", save_flag=False) -> None:
     """
     Plot the reduced features.
 
@@ -43,11 +43,20 @@ def plot_reduced_features(reduced_features: np.ndarray, title: str = "Feature Vi
     Returns:
         None
     """
+    unique_labels = np.unique(labels)
+    colors = plt.cm.tab10(np.linspace(0, 1, len(unique_labels)))
 
     plt.figure(figsize=(10, 8))
-    plt.scatter(reduced_features[:, 0], reduced_features[:, 1], c='blue', cmap='Spectral', s=5)
+    for label, color in zip(unique_labels, colors):
+        indices = labels == label
+        plt.scatter(reduced_features[indices, 0], reduced_features[indices, 1], 
+                    color=color, label=f'Label {label}', alpha=0.6)
+    # plt.scatter(reduced_features[:, 0], reduced_features[:, 1], c=labels, cmap='Spectral', s=5)
     plt.title(title)
     plt.xlabel("Component 1")
     plt.ylabel("Component 2")
     plt.colorbar()
+    plt.legend()
+    if save_flag:
+        plt.savefig('outputs/feature_visualization.png')
     plt.show()

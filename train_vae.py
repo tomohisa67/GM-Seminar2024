@@ -9,14 +9,14 @@ import os
 import argparse
 from typing import Dict, Any
 
-def train_vae(epoch: int, model: VAE, train_loader: DataLoader, optimizer: optim.Optimizer, device: torch.device) -> None:
+def train_vae(epoch: int, model: VAE, reg: float, train_loader: DataLoader, optimizer: optim.Optimizer, device: torch.device) -> None:
     model.train()
     train_loss = 0
     for i, (data, _) in enumerate(train_loader):
         data = data.to(device)
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
-        loss = loss_function(recon_batch, data, mu, logvar)
+        loss = loss_function(recon_batch, data, mu, logvar, reg)
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
@@ -24,14 +24,14 @@ def train_vae(epoch: int, model: VAE, train_loader: DataLoader, optimizer: optim
             print(f'Train Epoch: {epoch} [{i * len(data)}/{len(train_loader.dataset)} ({100. * i / len(train_loader):.0f}%)]\tLoss: {loss.item() / len(data):.6f}')
     print(f'====> Epoch: {epoch} Average loss: {train_loss / len(train_loader.dataset):.4f}')
 
-def test_vae(epoch: int, model: VAE, test_loader: DataLoader, device: torch.device) -> None:
+def test_vae(epoch: int, model: VAE, reg: float, test_loader: DataLoader, device: torch.device) -> None:
     model.eval()
     test_loss = 0
     with torch.no_grad():
         for i, (data, _) in enumerate(test_loader):
             data = data.to(device)
             recon_batch, mu, logvar = model(data)
-            test_loss += loss_function(recon_batch, data, mu, logvar).item()
+            test_loss += loss_function(recon_batch, data, mu, logvar, reg).item()
     test_loss /= len(test_loader.dataset)
     print(f'====> Test set loss: {test_loss:.4f}')
 
@@ -44,25 +44,35 @@ def main() -> None:
     with open(args.config) as f:
         config: Dict[str, Any] = json.load(f)
 
+    dataset_name = args.dataset
+    batch_size = config["batch_size"]
+    input_dim = config["input_dim"]
+    hidden_dim = config["hidden_dim"]
+    latent_dim = config["latent_dim"]
+    reg = config["reg"]
+    lr = config["learning_rate"]
+    epochs = config["epochs"]
+    save_log_path = config["save_path"]
+
     device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train_loader, test_loader = get_dataloader(dataset_name=args.dataset, batch_size=config["batch_size"])
+    train_loader, test_loader = get_dataloader(dataset_name=dataset_name, batch_size=batch_size)
     
-    model: VAE = VAE(input_dim=config["input_dim"], hidden_dim=config["hidden_dim"], latent_dim=config["latent_dim"]).to(device)
-    optimizer: optim.Optimizer = optim.Adam(model.parameters(), lr=config["learning_rate"])
+    model: VAE = VAE(input_dim=input_dim, hidden_dim=hidden_dim, latent_dim=latent_dim).to(device)
+    optimizer: optim.Optimizer = optim.Adam(model.parameters(), lr=lr)
 
     save_dir: str = 'save'
     os.makedirs(save_dir, exist_ok=True)
     model_save_path: str = os.path.join(save_dir, 'model.pth')
 
     # training
-    for epoch in range(1, config["epochs"] + 1):
-        train_vae(epoch, model, train_loader, optimizer, device)
-        test_vae(epoch, model, test_loader, device)
+    for epoch in range(1, epochs + 1):
+        train_vae(epoch, model, reg, train_loader, optimizer, device)
+        test_vae(epoch, model, reg, test_loader, device)
         save_checkpoint({
             'epoch': epoch, 
             'state_dict': model.state_dict(), 
             'optimizer': optimizer.state_dict()
-        }, filename=config["save_path"])
+        }, filename=save_log_path)
 
     # save model
     save_model(model, model_save_path)
