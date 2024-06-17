@@ -1,7 +1,7 @@
 version: '3.12'
 
 services:
-  kasai-lab:
+  gm-seminar:
     build: .
     volumes:
       - .:/app

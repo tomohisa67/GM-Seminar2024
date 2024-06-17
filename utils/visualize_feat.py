@@ -55,7 +55,7 @@ def plot_reduced_features(reduced_features: np.ndarray, labels: np.ndarray, titl
     plt.title(title)
     plt.xlabel("Component 1")
     plt.ylabel("Component 2")
-    plt.colorbar()
+    # plt.colorbar()
     plt.legend()
     if save_flag:
         plt.savefig('outputs/feature_visualization.png')

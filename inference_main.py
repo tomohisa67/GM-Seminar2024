@@ -1,6 +1,6 @@
 import torch
 from torch import Tensor
-from models.vae import VAE
+from models.vae import VAE, ConvVAE
 from models.ae import Autoencoder
 from data.dataset import get_dataloader
 from utils.utils import load_model, save_output
@@ -40,7 +40,7 @@ def main():
         config = json.load(f)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train_loader, test_loader = get_dataloader(dataset_name=args.dataset, batch_size=1024*2)
+    train_loader, test_loader = get_dataloader(dataset_name=args.dataset, batch_size=1024)
     
     if args.model_type == 'vae':
         model = VAE(
@@ -75,21 +75,22 @@ def main():
         model = load_model(model, args.checkpoint, device)
 
         test_data_iter = iter(test_loader)
-        test_data, _ = next(test_data_iter)
-
+        test_data, labels = next(test_data_iter)
         reconstructed, latent_vec = infer_ae(model, test_data, device)
+        
         reconstructed = reconstructed.cpu().numpy()
         latent_vec = latent_vec.cpu().numpy()
         test_data = test_data.cpu().numpy()
+        labels = labels.cpu().numpy()
 
         # save
-        save_output(reconstructed, args.output_dir, file_name='reconstructed_ae.npy')
+        # save_output(reconstructed, args.output_dir, file_name='reconstructed.npy')
         # plot
-        # plot_images(test_data, reconstructed)
+        plot_images(test_data, reconstructed, save_flag=True)
 
         # reduce dimensionality
         reduced_features = reduce_dimensionality(latent_vec)
-        plot_reduced_features(reduced_features)
+        plot_reduced_features(reduced_features, labels, save_flag=True)
 
 if __name__ == '__main__':
     main()

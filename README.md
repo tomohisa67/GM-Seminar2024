@@ -7,11 +7,18 @@ Create vitual environment.
 ```
 docker-compose build
 docker-compose up -d
-docker-compose exec kasai-lab bash
+docker-compose exec gm-seminar bash
 ```
 * Conda
+Install Anaconda or Miniconda and run the following commands.
 ```
 conda create -n gm-seminar python=3.12
+pip install -r requirments.txt
+```
+* venv
+```
+python -V
+python -m venv gm-seminar
 pip install -r requirments.txt
 ```
 ## Dataset
