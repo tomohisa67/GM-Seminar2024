@@ -32,15 +32,21 @@ class VAE(nn.Module):
         z = self.reparameterize(mu, logvar)
         return self.decode(z), mu, logvar
 
+
 def conv_output_size(h, kernel_size=4, stride=2, padding=1):
     return (h + 2 * padding - kernel_size) // stride + 1
 
 def convtranspose_output_size(h, kernel_size=4, stride=2, padding=1):
     return (h - 1) * stride - 2 * padding + kernel_size
 
-# エラーが出ます
+def conv_output_size(h, kernel_size=4, stride=2, padding=1):
+    return (h + 2 * padding - kernel_size) // stride + 1
+
+def convtranspose_output_size(h, kernel_size=4, stride=2, padding=1):
+    return (h - 1) * stride - 2 * padding + kernel_size
+
 class ConvVAE(nn.Module):
-    def __init__(self, input_channels: int = 1, hidden_dim: int = 400, latent_dim: int = 20, input_size: int = 28) -> None:
+    def __init__(self, input_channels: int = 3, hidden_dim: int = 128, latent_dim: int = 20, input_size: int = 32) -> None:
         super(ConvVAE, self).__init__()
         self.latent_dim = latent_dim
         self.hidden_dim = hidden_dim

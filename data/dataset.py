@@ -1,5 +1,6 @@
 import torch
 from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
 
 def get_dataloader(dataset_name='mnist', batch_size=64, data_dir='./data'):
     
@@ -17,7 +18,7 @@ def get_dataloader(dataset_name='mnist', batch_size=64, data_dir='./data'):
     else:
         raise ValueError(f"Unsupported dataset: {dataset_name}. Supported datasets are 'mnist' and 'cifar10'.")
 
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
     return train_loader, test_loader

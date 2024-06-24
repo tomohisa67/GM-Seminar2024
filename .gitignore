@@ -1,5 +1,6 @@
 **/__pycache__/
 data/MNIST/*
+data/
 logs/*.pth.tar
 outputs/*.npy
 outputs/*.png
