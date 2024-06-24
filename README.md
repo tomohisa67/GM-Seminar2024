@@ -10,15 +10,18 @@ docker-compose up -d
 docker-compose exec gm-seminar bash
 ```
 * Conda
-Install Anaconda or Miniconda and run the following commands.
 ```
+# Install Anaconda or Miniconda and run the following commands.
 conda create -n gm-seminar python=3.12
+conda activate gm-seminar
+# which pip
 pip install -r requirments.txt
 ```
 * venv
 ```
 python -V
 python -m venv gm-seminar
+source myvenv/bin/activate
 pip install -r requirments.txt
 ```
 ## Dataset
