@@ -7,3 +7,4 @@ outputs/*.png
 save/model_vae_mnist_reg*.pth
 save/reconstruction_loss.png
 stable-diffusion/*
+checkpoints/*
