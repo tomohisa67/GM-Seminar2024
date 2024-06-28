@@ -30,7 +30,7 @@ def infer_ae(model: Autoencoder, data: Tensor, device: torch.device) -> Tensor:
 def main():
     parser = argparse.ArgumentParser(description='Inference with VAE')
     parser.add_argument('--model_type', type=str, default='vae', required=True, help='Model type to use (vae)')
-    parser.add_argument('--checkpoint', type=str,  default='save/model_vae_mnist.pth', required=True, help='Path to the checkpoint file')
+    parser.add_argument('--checkpoint', type=str,  default='checkpoints/model_vae_mnist.pth', required=True, help='Path to the checkpoint file')
     parser.add_argument('--dataset', type=str, default='mnist', help='Dataset to use (default: mnist)')
     parser.add_argument('--config', type=str, default='configs/config_vae.json', help='Path to config file')
     parser.add_argument('--output_dir', type=str, default='outputs', help='Directory to save the reconstructed images')
