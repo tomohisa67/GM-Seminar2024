@@ -3,7 +3,7 @@ Presentation slides are [here](https://waseda.app.box.com/folder/268416256524).
 
 ## Setup
 Create vitual environment.
-* Docker
+* Docker (xxx)
 ```
 docker-compose build
 docker-compose up -d
@@ -20,7 +20,7 @@ pip install -r requirments.txt
 * venv
 ```
 python -V
-python -m venv gm-seminar
+python -m venv myvenv
 source myvenv/bin/activate
 pip install -r requirments.txt
 ```
@@ -35,7 +35,7 @@ python train_vae.py --dataset mnist
 
 ## Generate Samples
 ```
-python inference_main.py --model_type vae --checkpoint save/model_vae_mnist.pth
+python inference_main.py --model_type vae --checkpoint checkponts/model_vae_mnist.pth
 ```
 
 ## コードの詳細
@@ -55,7 +55,7 @@ python inference_main.py --model_type vae --checkpoint save/model_vae_mnist.pth
 ├── outputs # モデルの出力を保存（後の分析に使用するため）
 │   └── reconstructed.npy 
 ├── requirements.txt # インストールするpythonライブラリを列挙
-├── save # 学習したモデルを保存
+├── checkpoints # 学習済みモデルを配置
 │   └── model_vae_mnist.pth
 ├── train_vae.py # モデルの学習に使用
 └── utils
